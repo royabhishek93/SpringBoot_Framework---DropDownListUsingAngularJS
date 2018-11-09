@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.min.js"></script>
+    <script type="text/javascript">
+        var app = angular.module('MyApp', [])
+        app.controller('MyController', function ($scope, $http, $window) {
+            $scope.DefaultLabel = "Loading.....";
+            var get = $http({
+                method: "GET",
+                url: "/getAllCustomers",
+                dataType: 'json',
+                data: {},
+                headers: { "Content-Type": "application/json" }
+            });
+ 
+            get.success(function (data, status) {
+            	console.log("status---"+status+"---data---"+data);
+                $scope.DefaultLabel = "Please Select";
+                $scope.Customers = data;
+            });
+ 
+            get.error(function (data, status) {
+            	console.log("status---"+status+"---data---"+data);
+                $window.alert(data.Message);
+            });
+        });
+    </script>
+    <div ng-app="MyApp" ng-controller="MyController">
+        <select>
+            <option value="0"label="{{DefaultLabel}}"></option>
+            <option ng-repeat="customer in Customers" value="{{customer.customerId}}">
+                {{customer.customerName}}
+            </option>
+        </select>
+        {{Customers}}
+    </div>
+</body>
+</html>
